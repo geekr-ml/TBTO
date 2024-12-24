@@ -5,124 +5,160 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TB Treatment Outcome Prediction</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #f8f9fa;
             font-family: 'Roboto', sans-serif;
         }
         .container {
-            max-width: 800px;
-            margin: 50px auto;
+            max-width: 40%;
+            margin: 5px auto;
+            padding: 20px;
         }
-        .form-card {
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .card-header {
+            background-color: #0d58a9;
+            color: #fff;
         }
         .btn-primary {
-            width: 100%;
             background-color: #0d58a9;
             border-color: #0d58a9;
         }
         .btn-primary:hover {
             background-color: #0c6ed8;
         }
-        .text-primary{
-            font-size: 180%;
-            font-weight:600;
+        .form-control {
+            margin-bottom: 10px;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .form-control, .form-select, .form-label {
+            margin-bottom: 8px; /* Added more vertical space */
+            font-size: 18px;
+        }
+        .footer {
+            background-color: #f1f3f5;
+            color: rgb(0, 0, 0);
+            padding: 10px 0;
+            text-align: center;
+        }
+        .section-divider {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #0d58a9;
+            border-bottom: 2px solid #0d58a9;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card form-card">
-            <h1 class="text-center text-primary">TB Treatment Outcome Prediction</h1>
-            <form action="/predict" method="POST">
-                <div class="mb-3">
-                    <label for="types_of_cases" class="form-label">Types of Cases</label>
-                    <select class="form-select" id="types_of_cases" name="types_of_cases" required>
-                        <option value="0">NEW (0)</option>
-                        <option value="1">PMDT (1)</option>
-                        <option value="2">RETREATMENT: OTHERS RETREATMENT (2)</option>
-                        <option value="3">RECURRENT (3)</option>
-                        <option value="4">RETREATMENT: TREATMENT AFTER FAILURE (4)</option>
-                        <option value="5">RETREATMENT: TREATMENT AFTER LOST TO FOLLOW UP (5)</option>
-                    </select>
-                </div>
+        <div class="card shadow">
+            <div class="card-header text-center">
+                <h3>Tuberculosis Treatment Outcome Prediction</h3>
+            </div>
+            <div class="card-body">
+                <form action="/predict" method="POST">
+                    <!-- Patient Information Section -->
+                    <div class="section-divider">Patient Information</div>
+                    <div class="row">
+                        <div class="col-md-4 col-12">
+                            <label for="age" class="form-label">Age:</label>
+                            <input type="number" id="age" name="age" class="form-control" min="0" max="120" required>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <label for="height" class="form-label">Height (cm):</label>
+                            <input type="number" id="height" name="height" class="form-control" required>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <label for="weight" class="form-label">Weight (kg):</label>
+                            <input type="number" id="weight" name="weight" class="form-control" required>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="site_of_tb_disease" class="form-label">Site of TB Disease</label>
-                    <select class="form-select" id="site_of_tb_disease" name="site_of_tb_disease" required>
-                        <option value="0">EXTRA PULMONARY (0)</option>
-                        <option value="1">PULMONARY (1)</option>
-                    </select>
-                </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="hiv_status" class="form-label">HIV Status</label>
-                    <select class="form-select" id="hiv_status" name="hiv_status" required>
-                        <option value="0">NON-REACTIVE (0)</option>
-                        <option value="1">POSITIVE (1)</option>
-                        <option value="2">REACTIVE (2)</option>
-                    </select>
-                </div>
+                    <!-- Clinical Details Section -->
+                    <div class="section-divider">Clinical Details</div>
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <label for="types_of_cases" class="form-label">Types of Cases:</label>
+                            <select id="types_of_cases" name="types_of_cases" class="form-control" required>
+                                <option value="0">NEW</option>
+                                <option value="1">PMDT</option>
+                                <option value="3">RECURRENT</option>
+                                <option value="2">RETREATMENT: OTHERS RETREATMENT</option>
+                                <option value="4">RETREATMENT: TREATMENT AFTER FAILURE</option>
+                                <option value="5">RETREATMENT: TREATMENT AFTER LOST TO FOLLOW UP</option>
+                            </select>
+                        </div>
 
-                <div class="mb-3">
-                    <label for="bacteriologically_confirmed" class="form-label">Bacteriologically Confirmed</label>
-                    <select class="form-select" id="bacteriologically_confirmed" name="bacteriologically_confirmed" required>
-                        <option value="0">NEGATIVE (0)</option>
-                        <option value="1">POSITIVE (1)</option>
-                    </select>
-                </div>
+                        <div class="col-md-6 col-12">
+                            <label for="site_of_tb_disease" class="form-label">Site of TB Disease</label>
+                            <select id="site_of_tb_disease" name="site_of_tb_disease" class="form-select" required>
+                                <option value="0">EXTRA PULMONARY</option>
+                                <option value="1">PULMONARY</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <label for="hiv" class="form-label">HIV:</label>
+                            <select id="hiv" name="hiv" class="form-control" required>
+                                <option value="0">NON-REACTIVE</option>
+                                <option value="1">POSITIVE</option>
+                                <option value="2">REACTIVE</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <label for="bacteriologically_confirmed" class="form-label">Bacteriologically Confirmed</label>
+                            <select class="form-select" id="bacteriologically_confirmed" name="bacteriologically_confirmed" required>
+                                <option value="0">NEGATIVE</option>
+                                <option value="1">POSITIVE</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="rif_resistance_detected" class="form-label">Rif Resistance Detected</label>
-                    <select class="form-select" id="rif_resistance_detected" name="rif_resistance_detected" required>
-                        <option value="0">NEGATIVE (0)</option>
-                        <option value="1">POSITIVE (1)</option>
-                    </select>
-                </div>
+                    <!-- Treatment History Section -->
+                    <div class="section-divider">Drug Sensitivity Test & Treatment History</div>
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <label for="rif_resistance_detected" class="form-label">Rif Resistance Detected</label>
+                            <select class="form-select" id="rif_resistance_detected" name="rif_resistance_detected" required>
+                                <option value="0">NEGATIVE</option>
+                                <option value="1">POSITIVE</option>
+                            </select>
+                        </div>
+                        <!-- <div class="col-md-6 col-12">
+                            <label for="rif_resistance_not_detected" class="form-label">Rif Resistance Not Detected</label>
+                            <select class="form-select" id="rif_resistance_not_detected" name="rif_resistance_not_detected" required>
+                                <option value="0">NEGATIVE</option>
+                                <option value="1">POSITIVE</option>
+                            </select>
+                        </div> -->
+                        <div class="col-md-6 col-12">
+                            <label for="rr_tb" class="form-label">RR-TB Excluding Pre-XDR and XDR-TB</label>
+                            <select class="form-select" id="rr_tb" name="rr_tb" required>
+                                <option value="0">NEGATIVE</option>
+                                <option value="1">POSITIVE</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <label for="days_in_treatment" class="form-label">No. of Days in Treatment</label>
+                            <input type="number" class="form-control" id="days_in_treatment" name="days_in_treatment" required>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="rif_resistance_not_detected" class="form-label">Rif Resistance Not Detected</label>
-                    <select class="form-select" id="rif_resistance_not_detected" name="rif_resistance_not_detected" required>
-                        <option value="0">NEGATIVE (0)</option>
-                        <option value="1">POSITIVE (1)</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="rr_tb" class="form-label">RR-TB Excluding Pre-XDR and XDR-TB</label>
-                    <select class="form-select" id="rr_tb" name="rr_tb" required>
-                        <option value="0">NEGATIVE (0)</option>
-                        <option value="1">POSITIVE (1)</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="age" class="form-label">Age</label>
-                    <input type="number" class="form-control" id="age" name="age" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="height" class="form-label">Height (cm)</label>
-                    <input type="number" class="form-control" id="height" name="height" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="weight" class="form-label">Weight (kg)</label>
-                    <input type="number" class="form-control" id="weight" name="weight" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="days_in_treatment" class="form-label">No. of Days in Treatment</label>
-                    <input type="number" class="form-control" id="days_in_treatment" name="days_in_treatment" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+                    <!-- Submit Button -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary mt-3 w-100">Predict Outcome</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+    <footer class="footer">
+        <p>&copy; 2024 Tuberculosis Treatment Outcome Prediction System. All rights reserved.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
