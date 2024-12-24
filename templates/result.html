@@ -3,47 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediction Result</title>
+    <title>TB Treatment Outcome Report</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
-            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            padding-top: 20px;
         }
         .container {
-            max-width: 600px;
-            margin-top: 50px;
+            max-width: 80%;
+            margin-top: 20px;
+            margin-bottom: 20px;
         }
-        .btn-primary {
-            background-color: #0d58a9;
-            border-color: #0d58a9;
+        .main-heading {
+            text-align: center;
+            font-size: 1.9rem;
+            font-weight: bold;
+            color: #1e5b8e;
+            margin-bottom: 30px;
         }
-        .btn-primary:hover {
-            background-color: #0c6ed8;
+        .card {
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .result-card {
-            padding: 30px;
+        .card-header {
+            background-color: #1e5b8e;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .card-body {
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
-        .text-primary{
-            font-size: 180%;
-            font-weight:600;
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1e5b8e;
+            margin-bottom: 20px;
+        }
+        .result-item {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .patient-values table th, .patient-values table td {
+            padding: 10px;
+            font-size: 0.9rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .patient-values table th {
+            background-color: #f8f9fa;
+            color: #1e5b8e;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer p {
+            margin: 0;
+            color: #666;
+        }
+        .shap-section img {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .shap-section {
+            text-align: center;
+        }
+        .shap-section img {
+            margin-top: 20px;
+        }
+        .result-header {
+            margin-bottom: 20px;
+        }
+        .row {
+            margin-bottom: 20px;
+        }
+        .prediction-probabilities {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .prediction-probabilities div {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        ul{
+            padding:10px;
+            margin-left: 10px;;
+            list-style: none; 
+            border:4px solid #1e5b8e;
+            border-radius: 2%;
+            line-height: 1.8;
+        }
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: #fff;
+                color: #000;
+                -webkit-print-color-adjust: exact; /* Ensure colors are preserved */
+                margin: 0;
+            }
+            .container {
+                max-width: 190mm; /* A4 width */
+                margin: 0 auto;
+                padding: 10mm;
+            }
+            .main-heading {
+                font-size: 1.8rem; /* Adjust for print */
+                margin-bottom: 15px;
+            }
+            .card {
+                box-shadow: none;
+                margin-bottom: 10px;
+            }
+            .section-title {
+                font-size: 1.0rem;
+                font-weight: bold;
+                color: #1e5b8e;
+                margin-bottom: 20px;
+            }
+            .card-header {
+                background-color: #1e5b8e;
+                color: white;
+                font-size: 1.0rem;
+                font-weight: bold;
+            }
+            .shap-section img {
+                max-height: 250px;
+            }
+            .footer {
+                display: none; /* Hide footer on print */
+            }
+
+            /* Ensure "Feature Importance" starts on Page 2 */
+            .feature-importance-section {
+                page-break-before: always;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card result-card">
-            <h1 class="text-center text-primary">TB Treatment Outcome</h1>
-            <p class="lead text-center">
-                Predicted Status: <strong><b>{{ prediction }}</b></strong>
-            </p>
-            <div class="text-center">
-                <br><a href="/" class="btn btn-primary">Go Back</a>
+        <!-- Page Main Heading -->
+        <div class="main-heading">
+            TB Treatment Outcome Report
+        </div>
+
+        <!-- Prediction Results Card -->
+        <div class="card prediction-result-container">
+            <div class="card-header">
+                Prediction Results: <span style="text-transform: uppercase;">{{ prediction }}</span>
+            </div>
+            <div class="card-body">
+                <div class="prediction-probabilities">
+                    <div>
+                        <p style="font-weight: 500; font-size: 22px;">
+                            <strong>Confidence Score: {{ confidence_score }}</strong> 
+                        </p>
+                    </div>
+                    <div>
+                        <p><strong>Probabilities for All Classes (%)</strong></p>
+                        <ul>
+                            {% for class, probability in probabilities.items() %}
+                                <li>{{ class }}: {{ probability }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- Patient Data and SHAP Plot -->
+        <div class="card">
+            <div class="card-header">
+                Patient Information and SHAP Explanation
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Patient Information -->
+                    <div class="col-md-6 patient-values">
+                        <table class="table">
+                            {% for feature, value in entered_values.items() %}
+                            <tr>
+                                <th>{{ feature }}</th>
+                                <td>{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                    <!-- SHAP Plot -->
+                    <div class="col-md-6 shap-section">
+                        <div class="section-title">SHAP Explanation</div>
+                        <p>The following plot shows the most influential features contributing to the prediction:</p>
+                        <img src="{{ shap_plot_path }}" alt="SHAP Beeswarm Plot">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Importance -->
+        <div class="card">
+            <div class="card-header">
+                Feature Importance
+            </div>
+            <div class="card-body shap-section">
+                <div>
+                    {{ shap_table_html | safe }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Go Back and Print Buttons -->
+        <div class="text-center no-print">
+            <a href="/" class="btn btn-primary">Go Back</a>
+            <button class="btn btn-success" onclick="window.print()">Print Report</button>
+        </div>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 TB Treatment Outcome System. All rights reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
