@@ -1,3 +1,4 @@
+shap
 Flask==3.0.3
 gunicorn==22.0.0
 absl-py==2.1.0
