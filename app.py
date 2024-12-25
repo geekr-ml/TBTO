@@ -18,9 +18,9 @@ except FileNotFoundError:
     raise FileNotFoundError(f"Model file '{model_path}' not found. Ensure the file path is correct.")
 
 # Load training data for SHAP
-X_train_path = "X_train_TBTO.xlsx"
+X_train_path = "X_train.xlsx"
 try:
-    X_train = pd.read_excel(X_train_path)
+    X_train = pd.read_csv(X_train_path)
     feature_names = X_train.columns.tolist()  # Dynamically fetch feature names
 except FileNotFoundError:
     raise FileNotFoundError(f"Training data file '{X_train_path}' not found. Ensure the file path is correct.")
@@ -122,7 +122,7 @@ def predict():
             "site_of_tb_disease": "Site of TB Disease",
             "hiv": "HIV Status",
             "bacteriologically_confirmed": "Bacteriologically Confirmed",
-            "rif_resistance_detected": "Rif Resistance Detected",
+            "rif_resistance_not_detected": "Rif Resistance",
             "rr_tb": "RR-TB Excluding Pre-XDR and XDR-TB",
             "age": "Age",
             "height": "Height (cm)",
@@ -143,22 +143,21 @@ def predict():
         # Parse inputs into a list for prediction
         try:
             features = [
-                int(form_data.get("types_of_cases")),                   # Types of Cases
-                int(form_data.get("site_of_tb_disease")),               # Site of TB Disease
-                int(form_data.get("hiv")),                              # HIV status
-                int(form_data.get("bacteriologically_confirmed")),      # Bacteriologically Confirmed
-                int(form_data.get("rif_resistance_detected")),          # Rif Resistance Detected
-                0,                                                     # Placeholder for unused feature
-                int(form_data.get("rr_tb")),                            # RR-TB Excluding Pre-XDR and XDR-TB
+                int(form_data.get("days_in_treatment")),                 # No. of Days in Treatment
+                int(form_data.get("rif_resistance_not_detected")),      # Rif Resistance (rif_resistance_not_detected)
                 float(form_data.get("age")),                            # Age
+                int(form_data.get("bacteriologically_confirmed")),      # Bacteriologically Confirmed              
+                int(form_data.get("types_of_cases")),                   # Types of Cases
                 float(form_data.get("height")),                         # Height
+                int(form_data.get("hiv")),                              # HIV status
+                int(form_data.get("site_of_tb_disease")),               # Site of TB Disease
                 float(form_data.get("weight")),                         # Weight
-                int(form_data.get("days_in_treatment"))                 # No. of Days in Treatment
+                int(form_data.get("rr_tb")),                            # RR-TB Excluding Pre-XDR and XDR-TB
             ]
         except ValueError:
             return "Error: Invalid input type. Ensure all fields are filled correctly.", 400
 
-        if len(features) != 11:
+        if len(features) != 10:
             return "Error: Incorrect number of features provided. Check the form inputs.", 400
 
         # Make prediction
