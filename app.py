@@ -18,7 +18,7 @@ except FileNotFoundError:
     raise FileNotFoundError(f"Model file '{model_path}' not found. Ensure the file path is correct.")
 
 # Load training data for SHAP
-X_train_path = "X_train.xlsx"
+X_train_path = "X_train.csv"
 try:
     X_train = pd.read_csv(X_train_path)
     feature_names = X_train.columns.tolist()  # Dynamically fetch feature names
