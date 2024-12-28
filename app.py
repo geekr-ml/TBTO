@@ -87,8 +87,8 @@ def predict():
                 float(form_data.get("weight")),                         # Weight
                 int(form_data.get("site_of_tb_disease")),               # Site of TB Disease
                 int(form_data.get("hiv")),                              # HIV status
-                int(form_data.get("rif_resistance_detected")),          # Rif Resistance Detected
-                # int(form_data.get("rif_resistance_not_detected")),          # Rif Resistance Detected
+                # int(form_data.get("rif_resistance_detected")),          # Rif Resistance Detected
+                int(form_data.get("rif_resistance_not_detected")),      # Rif Resistance Detected
                 0,
                 int(form_data.get("types_of_cases")),                   # Types of Cases
                 int(form_data.get("bacteriologically_confirmed")),      # Bacteriologically Confirmed
